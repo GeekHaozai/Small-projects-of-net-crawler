@@ -2,20 +2,24 @@ import re
 import json
 import requests
 
+
 def request_dangdang(url):
     try:
-        response=requests.get(url)
+        response = requests.get(url)
         response.encoding = 'gb2312'
-        if response.status_code==200:
+        if response.status_code == 200:
             print(response.text)
             return response.text
     except requests.RequestException:
         return None
 
+
 def parse_result(html):
-    pattern = re.compile('<li>.*?list_num.*?(\d+).</div>.*?<img src="(.*?)".*?class="name".*?title="(.*?)">.*?class="star">.*?class="tuijian">(.*?)</span>.*?class="publisher_info">.*?target="_blank">(.*?)</a>.*?class="biaosheng">.*?<span>(.*?)</span></div>.*?<p><span\sclass="price_n">&yen;(.*?)</span>.*?</li>',re.S)
-    #pattern=re.compile('<li>.*?list_num.*?(\d+).<image src="(.*?)".*?class="name".*?title="(.*?)".*?class="star".*?class="tuijian">(.*?)<.*?class="publisher_info.*?target="_blank">(.*?)<.*?class="biaosheng".*?<span>(.*?)<.*?class="price".*?<p><span class="price_n">&yen;(.*?)</span>.*?</li>',re.S)
-    items=re.findall(pattern,html)
+    pattern = re.compile(
+        '<li>.*?list_num.*?(\d+).</div>.*?<img src="(.*?)".*?class="name".*?title="(.*?)">.*?class="star">.*?class="tuijian">(.*?)</span>.*?class="publisher_info">.*?target="_blank">(.*?)</a>.*?class="biaosheng">.*?<span>(.*?)</span></div>.*?<p><span\sclass="price_n">&yen;(.*?)</span>.*?</li>',
+        re.S)
+    # pattern=re.compile('<li>.*?list_num.*?(\d+).<image src="(.*?)".*?class="name".*?title="(.*?)".*?class="star".*?class="tuijian">(.*?)<.*?class="publisher_info.*?target="_blank">(.*?)<.*?class="biaosheng".*?<span>(.*?)<.*?class="price".*?<p><span class="price_n">&yen;(.*?)</span>.*?</li>',re.S)
+    items = re.findall(pattern, html)
     for item in items:
         yield {
             'range': item[0],
@@ -29,20 +33,22 @@ def parse_result(html):
 
 
 def write_item_to_file(item):
-    print('开始写入数据====>'+str(item))
+    print('开始写入数据====>' + str(item))
     with open('book.txt', 'a', encoding='UTF-8') as f:
         f.write(json.dumps(item, ensure_ascii=False) + '\n')
         f.close()
 
+
 def main(page):
-    url='http://bang.dangdang.com/books/fivestars/01.00.00.00.00.00-recent30-0-0-1-'+str(page)
-    html=request_dangdang(url)
-    items=parse_result(html)
+    url = 'http://bang.dangdang.com/books/fivestars/01.00.00.00.00.00-recent30-0-0-1-' + str(page)
+    html = request_dangdang(url)
+    items = parse_result(html)
     # for item in items:
     #     write_item_to_file(item)
     for item in items:
         write_item_to_file(item)
 
+
 if __name__ == "__main__":
-   for i in range(1,26):
-       main(i)
+    for i in range(1, 26):
+        main(i)

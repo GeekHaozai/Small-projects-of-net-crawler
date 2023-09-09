@@ -9,5 +9,5 @@ import scrapy
 class ScrapynbItem(scrapy.Item):
     # define the fields for your item here like:
     title = scrapy.Field()
-    brief_comment=scrapy.Field()
-    #...
+    brief_comment = scrapy.Field()
+    # ...

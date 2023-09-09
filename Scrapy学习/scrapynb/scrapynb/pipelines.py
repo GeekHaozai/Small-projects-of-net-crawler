@@ -12,6 +12,7 @@ class ScrapynbPipeline:
     def process_item(self, item, spider):
         return item
 
+
 class CsvPipeline:
     def __init__(self):
         self.file = open('data.csv', 'a', newline='', encoding='utf-8')
@@ -24,4 +25,3 @@ class CsvPipeline:
 
     def close_spider(self, spider):
         self.file.close()
-

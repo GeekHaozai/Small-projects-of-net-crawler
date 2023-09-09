@@ -3,8 +3,6 @@ from bs4 import BeautifulSoup
 import xlwt
 
 
-
-
 def request_douban(url):
     try:
         response = requests.get(url)
@@ -14,17 +12,17 @@ def request_douban(url):
         return None
 
 
-book=xlwt.Workbook(encoding='utf-8',style_compression=0)
+book = xlwt.Workbook(encoding='utf-8', style_compression=0)
 
-sheet=book.add_sheet('豆瓣电影Top250',cell_overwrite_ok=True)
-sheet.write(0,0,'名称')
-sheet.write(0,1,'图片')
-sheet.write(0,2,'排名')
-sheet.write(0,3,'评分')
-sheet.write(0,4,'作者')
-sheet.write(0,5,'简介')
+sheet = book.add_sheet('豆瓣电影Top250', cell_overwrite_ok=True)
+sheet.write(0, 0, '名称')
+sheet.write(0, 1, '图片')
+sheet.write(0, 2, '排名')
+sheet.write(0, 3, '评分')
+sheet.write(0, 4, '作者')
+sheet.write(0, 5, '简介')
 
-n=1
+n = 1
 
 
 def save_to_excel(soup):
@@ -36,11 +34,11 @@ def save_to_excel(soup):
         item_index = item.find(class_='').string
         item_score = item.find(class_='rating_num').string
         item_author = item.find('p').text
-        if(item.find(class_='inq')!=None):
+        if (item.find(class_='inq') != None):
             item_intr = item.find(class_='inq').string
 
         # print('爬取电影：' + item_index + ' | ' + item_name +' | ' + item_img +' | ' + item_score +' | ' + item_author +' | ' + item_intr )
-        print('爬取电影：' + item_index + ' | ' + item_name  +' | ' + item_score  +' | ' + item_intr )
+        print('爬取电影：' + item_index + ' | ' + item_name + ' | ' + item_score + ' | ' + item_intr)
 
         global n
 
@@ -55,7 +53,7 @@ def save_to_excel(soup):
 
 
 def main(page):
-    url = 'https://movie.douban.com/top250?start='+ str(page*25)+'&filter='
+    url = 'https://movie.douban.com/top250?start=' + str(page * 25) + '&filter='
     html = request_douban(url)
     soup = BeautifulSoup(html, 'lxml')
     save_to_excel(soup)
